@@ -131,6 +131,66 @@ function GetUsersTransactions(){
     $json = json_decode($server_output,true);
     return $json;
 }
+function ApiBet($lottery_id,$draw_id,$web_user_id,$package_id,$template_id,$option) {
+    global $cfg;
+    $params = [
+        "bet" =>[
+            "lottery_id" => $lottery_id,
+            "draw_id" => $draw_id,
+            "web_user_id" => $web_user_id,
+            "package_id" => $package_id,
+            "lines_attributes" => [
+                [
+                    "commons" => [38,45,69,61,47],
+                    "specials" => [7],
+                    "template_id" => $template_id
+                ],
+                [
+                    "commons" => [54,42,22,60,13],
+                    "specials" => [23],
+                    "template_id" => $template_id
+                ],
+                [
+                    "commons" => [54,42,22,60,13],
+                    "specials" => [1],
+                    "template_id" => $template_id
+                ],
+                [
+                    "commons" => [54,42,22,60,13],
+                    "specials" => ["2"],
+                    "template_id" => $template_id
+                ],
+                [
+                    "commons" => [3,26,47,35,15],
+                    "specials" => [7],
+                    "template_id" => $template_id
+                ]
+            ],
+            "order_item_attributes" =>[
+                "buy_option" => $option
+            ]
+        ]
+    ];
+    $data = json_encode($params);
+    $result = "";
+    $URL = $cfg['bet_api_url'] + "/api/v1/bets";
+    $ch = curl_init($URL);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data),
+        'Authorization: Token token="' . $cfg['web_signup_token'] . '"')
+    );
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data) );
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($ch);
+    $error = curl_error($ch);
+    if($error != "" || !$result){
+    }
+    curl_close($ch);
+    return $result;
+}
 
 //= helpers
 function xml2array ( $xml ){

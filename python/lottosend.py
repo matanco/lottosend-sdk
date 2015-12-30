@@ -1,8 +1,8 @@
+#= Imports
 import json
 import urllib2
-class LottosendSDK:
-	#= Imports	
-	
+
+class LottosendSDK:		
 	#= Contrusctor
 	def __init__(self):				
 		self.token = ''
